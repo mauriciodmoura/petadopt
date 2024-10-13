@@ -69,4 +69,13 @@ public class AnimalController {
         return ResponseEntity.ok(animalDTOs);
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Busca um animal pelo ID")
+    public ResponseEntity<AnimalResponseDTO> getById(
+        @PathVariable UUID id
+    ) {
+        Animal animal = animalService.findById(id);
+        return ResponseEntity.ok(animalMapper.toAnimalResponse(animal));
+    }
+
 }
