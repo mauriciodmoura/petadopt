@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.petadopt.dto.AnimalCreateDTO;
 import com.example.petadopt.dto.AnimalResponseDTO;
 import com.example.petadopt.dto.AnimalUpdateDTO;
+import com.example.petadopt.enums.Status;
 import com.example.petadopt.mapper.AnimalMapper;
 import com.example.petadopt.model.Animal;
 import com.example.petadopt.service.AnimalService;
@@ -84,6 +85,18 @@ public class AnimalController {
         @PathVariable String category
     ) {
         List<Animal> animals = animalService.findByCategory(category);
+        List<AnimalResponseDTO> animalDTOs = animals.stream()
+            .map(animalMapper::toAnimalResponse)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(animalDTOs);
+    }
+
+    @GetMapping("/status/{status}")
+    @Operation(summary = "Busca animais por status")
+    public ResponseEntity<List<AnimalResponseDTO>> findByStatus(
+        @PathVariable Status status
+    ) {
+        List<Animal> animals = animalService.findByStatus(status);
         List<AnimalResponseDTO> animalDTOs = animals.stream()
             .map(animalMapper::toAnimalResponse)
             .collect(Collectors.toList());

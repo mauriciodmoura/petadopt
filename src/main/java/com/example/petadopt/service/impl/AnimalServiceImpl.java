@@ -1,6 +1,7 @@
 package com.example.petadopt.service.impl;
 
 import com.example.petadopt.dto.AnimalResponseDTO;
+import com.example.petadopt.enums.Status;
 import com.example.petadopt.model.Animal;
 import com.example.petadopt.repository.AnimalRepository;
 import com.example.petadopt.service.AnimalService;
@@ -61,6 +62,11 @@ public class AnimalServiceImpl implements AnimalService{
     @Override
     public List<Animal> findByCategory(String category) {
         return animalRepository.findByCategory(category);
+    }
+
+    @Override
+    public List<Animal> findByStatus(Status status) {
+        return animalRepository.findByStatus(status);
     }
 
 }
