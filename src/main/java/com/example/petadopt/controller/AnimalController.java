@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.petadopt.model.Animal;
 import com.example.petadopt.service.AnimalService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/animals")
 public class AnimalController {
@@ -20,6 +22,7 @@ public class AnimalController {
     }
 
     @PostMapping
+    @Operation(summary = "Cria um novo animal")
     public ResponseEntity<Animal> create(
         @RequestBody Animal animal
         ) {
