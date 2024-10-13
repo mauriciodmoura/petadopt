@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,10 +41,8 @@ public class AnimalControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Inicializando os dados comuns para ambos os testes
         animalId = UUID.randomUUID();
 
-        // Mock do AnimalCreateDTO
         animalCreateDTO = new AnimalCreateDTO();
         animalCreateDTO.setName("Rex");
         animalCreateDTO.setDescription("Cão amigável");
@@ -51,7 +51,6 @@ public class AnimalControllerTest {
         animalCreateDTO.setBirthDate(LocalDate.of(2020, 5, 10));
         animalCreateDTO.setStatus(Status.DISPONIVEL);
 
-        // Mock do Animal
         animal = new Animal();
         animal.setId(animalId);
         animal.setName(animalCreateDTO.getName());
@@ -61,7 +60,6 @@ public class AnimalControllerTest {
         animal.setBirthDate(animalCreateDTO.getBirthDate());
         animal.setStatus(animalCreateDTO.getStatus());
 
-        // Mock do AnimalResponseDTO
         animalResponseDTO = new AnimalResponseDTO();
         animalResponseDTO.setId(animal.getId());
         animalResponseDTO.setName(animal.getName());
@@ -70,7 +68,7 @@ public class AnimalControllerTest {
         animalResponseDTO.setCategory(animal.getCategory());
         animalResponseDTO.setBirthDate(animal.getBirthDate());
         animalResponseDTO.setStatus(animal.getStatus());
-        animalResponseDTO.setAge(3);  // Idade calculada
+        animalResponseDTO.setAge(3);
     }
 
 
@@ -103,6 +101,29 @@ public class AnimalControllerTest {
         assertEquals(animalResponseDTO.getName(), response.getBody().getName());
 
         verify(animalService, times(1)).findById(animalId);
+        verify(animalMapper, times(1)).toAnimalResponse(animal);
+    }
+
+    @Test
+    void testSearchByCategory() {
+        String category = "Dog";
+
+        List<Animal> animals = new ArrayList<>();
+        animals.add(animal);
+
+        List<AnimalResponseDTO> animalResponseDTOs = new ArrayList<>();
+        animalResponseDTOs.add(animalResponseDTO);
+
+        when(animalService.findByCategory(category)).thenReturn(animals);
+        when(animalMapper.toAnimalResponse(animal)).thenReturn(animalResponseDTO);
+
+        ResponseEntity<List<AnimalResponseDTO>> response = animalController.searchByCategory(category);
+
+        assertEquals(ResponseEntity.ok(animalResponseDTOs), response);
+        assertEquals(1, response.getBody().size());
+        assertEquals(animalResponseDTO.getName(), response.getBody().get(0).getName());
+
+        verify(animalService, times(1)).findByCategory(category);
         verify(animalMapper, times(1)).toAnimalResponse(animal);
     }
 }
