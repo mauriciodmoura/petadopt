@@ -126,4 +126,27 @@ public class AnimalControllerTest {
         verify(animalService, times(1)).findByCategory(category);
         verify(animalMapper, times(1)).toAnimalResponse(animal);
     }
+
+    @Test
+    void testFindByStatus() {
+        Status status = Status.DISPONIVEL;
+
+        List<Animal> animals = new ArrayList<>();
+        animals.add(animal);
+
+        List<AnimalResponseDTO> animalResponseDTOs = new ArrayList<>();
+        animalResponseDTOs.add(animalResponseDTO);
+
+        when(animalService.findByStatus(status)).thenReturn(animals);
+        when(animalMapper.toAnimalResponse(animal)).thenReturn(animalResponseDTO);
+
+        ResponseEntity<List<AnimalResponseDTO>> response = animalController.findByStatus(status);
+
+        assertEquals(ResponseEntity.ok(animalResponseDTOs), response);
+        assertEquals(1, response.getBody().size());
+        assertEquals(animalResponseDTO.getName(), response.getBody().get(0).getName());
+
+        verify(animalService, times(1)).findByStatus(status);
+        verify(animalMapper, times(1)).toAnimalResponse(animal);
+    }
 }
