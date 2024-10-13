@@ -1,8 +1,11 @@
 package com.example.petadopt.controller;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,6 +57,16 @@ public class AnimalController {
         animalMapper.toAnimalUpdate(animalUpdateDTO, existingAnimal);
         Animal updatedAnimal = animalService.update(id, existingAnimal);
         return ResponseEntity.ok(animalMapper.toAnimalResponse(updatedAnimal));
+    }
+
+    @GetMapping
+    @Operation(summary = "Busca todos os animais")
+    public ResponseEntity<List<AnimalResponseDTO>> getAll() {
+        List<Animal> animals = animalService.findAll();
+        List<AnimalResponseDTO> animalDTOs = animals.stream()
+            .map(animalMapper::toAnimalResponse)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(animalDTOs);
     }
 
 }
