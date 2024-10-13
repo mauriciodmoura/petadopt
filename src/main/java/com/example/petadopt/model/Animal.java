@@ -3,6 +3,7 @@ package com.example.petadopt.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.util.UUID;
 
 import com.example.petadopt.enums.Status;
 
@@ -10,8 +11,9 @@ import com.example.petadopt.enums.Status;
 @Entity
 public class Animal {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "UUID")
+    private UUID id;
     
     private String name;
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AnimalServiceImpl implements AnimalService{
 
-    private AnimalRepository animalRepository;
+    private final AnimalRepository animalRepository;
 
     @Autowired
     public AnimalServiceImpl(AnimalRepository animalRepository) {

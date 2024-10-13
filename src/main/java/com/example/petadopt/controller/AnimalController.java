@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping("/api/animals")
 public class AnimalController {
 
-    private AnimalService animalService;
+    private final AnimalService animalService;
 
     public AnimalController(AnimalService animalService) {
         this.animalService = animalService;
