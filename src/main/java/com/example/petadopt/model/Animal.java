@@ -22,7 +22,8 @@ public class Animal {
     private String category;
 
     private LocalDate birthDate;
-    
+
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     
