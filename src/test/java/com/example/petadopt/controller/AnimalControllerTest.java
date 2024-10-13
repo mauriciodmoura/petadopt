@@ -30,6 +30,7 @@ public class AnimalControllerTest {
     @Mock
     private AnimalMapper animalMapper;
 
+    private UUID animalId;
     private AnimalCreateDTO animalCreateDTO;
     private Animal animal;
     private AnimalResponseDTO animalResponseDTO;
@@ -38,6 +39,10 @@ public class AnimalControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
+        // Inicializando os dados comuns para ambos os testes
+        animalId = UUID.randomUUID();
+
+        // Mock do AnimalCreateDTO
         animalCreateDTO = new AnimalCreateDTO();
         animalCreateDTO.setName("Rex");
         animalCreateDTO.setDescription("Cão amigável");
@@ -46,8 +51,9 @@ public class AnimalControllerTest {
         animalCreateDTO.setBirthDate(LocalDate.of(2020, 5, 10));
         animalCreateDTO.setStatus(Status.DISPONIVEL);
 
+        // Mock do Animal
         animal = new Animal();
-        animal.setId(UUID.randomUUID());
+        animal.setId(animalId);
         animal.setName(animalCreateDTO.getName());
         animal.setDescription(animalCreateDTO.getDescription());
         animal.setUrlImage(animalCreateDTO.getUrlImage());
@@ -55,6 +61,7 @@ public class AnimalControllerTest {
         animal.setBirthDate(animalCreateDTO.getBirthDate());
         animal.setStatus(animalCreateDTO.getStatus());
 
+        // Mock do AnimalResponseDTO
         animalResponseDTO = new AnimalResponseDTO();
         animalResponseDTO.setId(animal.getId());
         animalResponseDTO.setName(animal.getName());
@@ -63,8 +70,9 @@ public class AnimalControllerTest {
         animalResponseDTO.setCategory(animal.getCategory());
         animalResponseDTO.setBirthDate(animal.getBirthDate());
         animalResponseDTO.setStatus(animal.getStatus());
-        animalResponseDTO.setAge(3);
+        animalResponseDTO.setAge(3);  // Idade calculada
     }
+
 
     @Test
     void testCreateAnimal() {
@@ -79,6 +87,22 @@ public class AnimalControllerTest {
 
         verify(animalMapper, times(1)).toAnimal(animalCreateDTO);
         verify(animalService, times(1)).create(animal);
+        verify(animalMapper, times(1)).toAnimalResponse(animal);
+    }
+
+
+
+    @Test
+    void testGetById() {
+        when(animalService.findById(animalId)).thenReturn(animal);
+        when(animalMapper.toAnimalResponse(animal)).thenReturn(animalResponseDTO);
+
+        ResponseEntity<AnimalResponseDTO> response = animalController.getById(animalId);
+
+        assertEquals(ResponseEntity.ok(animalResponseDTO), response);
+        assertEquals(animalResponseDTO.getName(), response.getBody().getName());
+
+        verify(animalService, times(1)).findById(animalId);
         verify(animalMapper, times(1)).toAnimalResponse(animal);
     }
 }
