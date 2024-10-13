@@ -78,4 +78,16 @@ public class AnimalController {
         return ResponseEntity.ok(animalMapper.toAnimalResponse(animal));
     }
 
+    @GetMapping("/category/{category}")
+    @Operation(summary = "Busca animais por categoria")
+    public ResponseEntity<List<AnimalResponseDTO>> searchByCategory(
+        @PathVariable String category
+    ) {
+        List<Animal> animals = animalService.findByCategory(category);
+        List<AnimalResponseDTO> animalDTOs = animals.stream()
+            .map(animalMapper::toAnimalResponse)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(animalDTOs);
+    }
+
 }

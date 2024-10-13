@@ -15,4 +15,5 @@ public interface AnimalService {
 
     List<Animal> findAll();
 
+    List<Animal> findByCategory(String category);
 }

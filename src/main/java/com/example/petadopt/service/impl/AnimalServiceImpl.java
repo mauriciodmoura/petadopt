@@ -53,8 +53,14 @@ public class AnimalServiceImpl implements AnimalService{
             .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado com o ID: " + id));
     }
 
+    @Override
     public List<Animal> findAll() {
         return animalRepository.findAll();
+    }
+
+    @Override
+    public List<Animal> findByCategory(String category) {
+        return animalRepository.findByCategory(category);
     }
 
 }

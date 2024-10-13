@@ -10,5 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface AnimalRepository extends JpaRepository<Animal, UUID> {
+
+    List<Animal> findByCategory(String category);
+    
     List<Animal> findByStatus(Status status);
 }
